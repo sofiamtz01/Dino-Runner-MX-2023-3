@@ -3,6 +3,7 @@ import pygame
 from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, CLOUD
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
+from dino_runner.components.power_ups.power_up_manager import PowerUpManager
 
 
 class Game:
@@ -20,6 +21,8 @@ class Game:
         self.x_pos_cloud = 600
         self.y_pos_cloud = 160
         self.obstaclemanager = ObstacleManager()
+        self.power_up_manager = PowerUpManager()
+        self.points = 0
 
     def run(self):
         # Game loop: events - update - draw
@@ -36,9 +39,11 @@ class Game:
                 self.playing = False
 
     def update(self):
+        self.points += 1
         user_input = pygame.key.get_pressed()
         self.player.update(user_input)
         self.obstaclemanager.update(self.game_speed, self.player)
+        self.power_up_manager.update(self.game_speed, self.points, self.player)
         if self.player.dino_dead:
             self.playing = False
 
@@ -49,6 +54,7 @@ class Game:
         self.player.draw(self.screen)
         self.draw_cloud()
         self.obstaclemanager.draw(self.screen)
+        self.power_up_manager.draw(self.screen)
         pygame.display.update()
         pygame.display.flip()
 
