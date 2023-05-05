@@ -1,5 +1,5 @@
 import pygame
-from dino_runner.utils.constants import RUNNING, DUCKING, JUMPING, DEAD, RUNNING_SHIELD, DUCKING_SHIELD, JUMPING_SHIELD, DEFAULT_TYPE, SHIELD_TYPE, RUNNING_HAMMER, DUCKING_HAMMER, JUMPING_HAMMER, HAMMER_TYPE
+from dino_runner.utils.constants import RUNNING, DUCKING, JUMPING, DEAD, RUNNING_SHIELD, DUCKING_SHIELD, JUMPING_SHIELD, DEFAULT_TYPE, SHIELD_TYPE, RUNNING_HAMMER, DUCKING_HAMMER, JUMPING_HAMMER, HAMMER_TYPE, CLOCK_TYPE
 
 class Dinosaur:
     X_POS = 80
@@ -24,6 +24,7 @@ class Dinosaur:
         self.dino_dead = False
         self.shield = False
         self.hammer = False
+        self.clock = False
         self.time_up_power_up = 0
 
     def update(self, user_input):
@@ -58,6 +59,10 @@ class Dinosaur:
             if time_to_show < 0:
                 self.reset()
         elif self.hammer:
+            time_to_show = round((self.time_up_power_up - pygame.time.get_ticks())/ 1000, 2)
+            if time_to_show < 0:
+                self.reset()
+        elif self.clock:
             time_to_show = round((self.time_up_power_up - pygame.time.get_ticks())/ 1000, 2)
             if time_to_show < 0:
                 self.reset()
@@ -100,10 +105,15 @@ class Dinosaur:
             self.hammer = True
             self.type = HAMMER_TYPE
             self.time_up_power_up = power_up.time_up
+        elif power_up.type == CLOCK_TYPE:
+            self.clock = True
+            self.type = CLOCK_TYPE
+            self.time_up_power_up = power_up.time_up
 
     def reset(self):
         self.type = DEFAULT_TYPE
         self.shield = False
         self.hammer = False
+        self.clock = False
 
         

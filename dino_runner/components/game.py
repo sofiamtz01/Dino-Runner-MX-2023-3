@@ -15,7 +15,7 @@ class Game:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
         self.playing = False
-        self.game_speed = 20
+        self.game_speed = 5
         self.x_pos_bg = 0
         self.y_pos_bg = 380
         self.player = Dinosaur()
@@ -26,6 +26,9 @@ class Game:
         self.points = 0
         self.running = True
         self.death_count = 0 
+
+        self.high_score = 0
+    
 
     def execute(self):
         while self.running:
@@ -58,8 +61,11 @@ class Game:
             text, text_rect = text_utils.get_center_message("Press any Key to Start")
             self.screen.blit(text, text_rect)
         if self.death_count > 0:
-             text, text_rect = text_utils.get_center_message("Press any Key to Start")
-             self.screen.blit(text, text_rect)
+            text, text_rect = text_utils.get_center_message("Press any Key to Start")
+            self.screen.blit(text, text_rect)
+        if self.high_score > 0:
+            high_score_text, high_score_rect = text_utils.get_center_message("High Score: " + str(self.high_score), height=320)
+            self.screen.blit(high_score_text, high_score_rect)
     
     def reset(self):
         self.player = False
@@ -70,6 +76,7 @@ class Game:
         self.player = Dinosaur()
         self.obstaclemanager.reset_obstacles()
         self.power_up_manager.reset_Power()
+        self.lives = 3
 
 
     def run(self):
@@ -88,13 +95,18 @@ class Game:
                 self.playing = False
 
     def update(self):
+        if self.points > self.high_score:
+            self.high_score = self.points
         self.points += 1
+
         user_input = pygame.key.get_pressed()
         self.player.update(user_input)
+
         self.obstaclemanager.update(self.game_speed, self.player)
         self.power_up_manager.update(self.game_speed, self.points, self.player)
         if self.player.dino_dead:
             self.playing = False
+
 
     def draw(self):
         self.clock.tick(FPS)

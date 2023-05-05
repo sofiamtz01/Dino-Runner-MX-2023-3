@@ -17,3 +17,10 @@ def get_center_message(message, width=SCREEN_WIDTH //2, height=SCREEN_HEIGHT //2
     text_rect = text.get_rect()
     text_rect.center =(width, height)
     return text, text_rect
+
+def get_up_message(message, width=SCREEN_WIDTH //2, height=320):
+    font = pygame.font.Font(FONT_STYLE)
+    text = font.render(message, True, black_color)
+    text_rect = text.get_rect()
+    text_rect.center =(width, height)
+    return text, text_rect
